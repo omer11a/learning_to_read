@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learning to Read the Contextual Tokens in Diffusion Transformers">
+  <meta property="og:title" content="Learning to Read the Contextual Tokens in Diffusion Transformers">
+  <meta property="og:description" content="Reading the visual semantics that emerge inside multimodal diffusion transformers, then strengthening them to improve generation.">
+  <meta property="og:image" content="static/images/teaser.jpg">
+  <title>Learning to Read the Contextual Tokens in Diffusion Transformers</title>
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:ital,wght@0,600;1,500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/index.css?v=20261001f">
+</head>
+<body>
+  <nav class="site-nav" aria-label="Page navigation">
+    <a class="wordmark" href="#top">Learning to Read</a>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Reading</a>
+      <a href="#alignment">Alignment</a>
+      <a href="#comparisons">Comparisons</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero shell">
+      <p class="eyebrow">Preprint · 2026</p>
+      <h1>Learning to Read the Contextual Tokens in Diffusion Transformers</h1>
+
+      <div class="authors" aria-label="Authors">
+        <span><a href="https://omer11a.github.io/">Omer Dahary</a><sup>1,*</sup></span>
+        <span><a href="https://etaisella.github.io/">Etai Sella</a><sup>1,*</sup></span>
+        <span><a href="https://www.cs.cornell.edu/~he93/">Hadar Averbuch-Elor</a><sup>2</sup></span>
+        <span><a href="https://danielcohenor.com/">Daniel Cohen-Or</a><sup>1</sup></span>
+        <span><a href="https://orpatashnik.github.io/">Or Patashnik</a><sup>1</sup></span>
+      </div>
+      <p class="affiliations"><sup>1</sup>Tel Aviv University &nbsp;&nbsp; <sup>2</sup>Cornell University &nbsp;&nbsp; <sup>*</sup>Equal contribution</p>
+
+      <div class="actions">
+        <a class="button primary" href="#" aria-label="arXiv link coming soon">
+          <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.8423 0a1.0037 1.0037 0 0 0-.922.6078c-.1536.3687-.0438.6275.2938 1.1113l6.9185 8.3597-1.0223 1.1058a1.0393 1.0393 0 0 0 .003 1.4229l1.2292 1.3135-5.4391 6.4444c-.2803.299-.4538.823-.2971 1.1986a1.0253 1.0253 0 0 0 .9585.635.9133.9133 0 0 0 .6891-.3405l5.783-6.126 7.4902 8.0051a.8527.8527 0 0 0 .6835.2597.9575.9575 0 0 0 .8777-.6138c.1577-.377-.017-.7502-.306-1.1407l-7.0518-8.3418 1.0632-1.13a.9626.9626 0 0 0 .0089-1.3165L4.6336.4639s-.3733-.4535-.768-.463zm14.341 1.5701a.877.877 0 0 0-.6554.2418l-5.6962 6.1584 1.6944 1.8319 5.3089-6.5138c.3251-.4335.479-.6603.3247-1.0292a1.1205 1.1205 0 0 0-.9763-.689z"/></svg>
+          <span>arXiv</span>
+        </a>
+        <span class="button disabled" aria-disabled="true">
+          <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          <span>Code coming soon</span>
+        </span>
+      </div>
+    </header>
+
+    <section class="teaser shell wide">
+      <p class="section-kicker">TL;DR</p>
+      <p class="tldr-summary">Contextual tokens are the text tokens inside an MM-DiT, and they are continuously updated based on information from the evolving image. We propose to <em>read</em> them as plain text to uncover what semantic information they obtain about the image, and to supervise them, resulting in better generation quality and distributional coverage.</p>
+      <img src="static/images/teaser.jpg" alt="Six ambiguous early denoising predictions, labeled by activities decoded from contextual tokens.">
+      <p class="teaser-explanation"><strong>What is this person doing?</strong> At an early denoising stage, we can extract the answer directly from the contextual tokens, even when the MM-DiT receives an empty prompt and the visual prediction remains ambiguous.</p>
+      <div id="overview" class="tldr">
+        <p class="section-kicker">Overview</p>
+        <h2>Reading and supervising the contextual space of MM-DiTs</h2>
+        <p class="tldr-intro">MM-DiTs jointly update visual and textual representations throughout generation. Image tokens are especially accessible to analysis; the evolving text-side representation is less understood.</p>
+
+        <div class="architecture-visual" aria-label="Comparison between image tokens and contextual tokens in an MM-DiT">
+          <div class="stream-panel image-stream">
+            <span class="stream-name">Visual stream</span>
+            <div class="image-token-grid" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <h3>Image tokens</h3>
+            <ul>
+              <li>Form a spatial representation of the evolving image</li>
+              <li>Can be visualized as images</li>
+              <li>Are explicitly supervised by the denoising objective</li>
+            </ul>
+          </div>
+
+          <div class="attention-bridge" aria-hidden="true">
+            <span class="model-label">MM-DiT</span>
+            <span class="attention-arrows">⇄</span>
+            <span class="attention-label">multimodal<br>attention</span>
+          </div>
+
+          <div class="stream-panel contextual-stream">
+            <span class="stream-name">Text stream</span>
+            <div class="context-token-row" aria-hidden="true">
+              <i>A</i><i>photo</i><i>of</i><i>...</i>
+            </div>
+            <div class="context-token-row evolved" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <h3>Contextual tokens</h3>
+            <ul>
+              <li>Text tokens updated through multimodal attention</li>
+              <li>Absorb information from the emerging visual representation</li>
+              <li>Have no explicit spatial correspondence or dedicated supervision</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="contribution-intro">In this work, we suggest two complementary ways to study and utilize the contextual tokens:</p>
+        <div class="contribution-flow">
+          <div class="contribution read">
+            <span class="contribution-number">1</span>
+            <div>
+              <h3>Read them</h3>
+              <p>Use question answering to extract plain-text directly from the contextual tokens.</p>
+              <p class="contribution-conclusion"><span>Conclusion</span>Contextual tokens capture global semantic information about the image, even when no prompt is provided to the model.</p>
+            </div>
+          </div>
+          <div class="contribution supervise">
+            <span class="contribution-number">2</span>
+            <div>
+              <h3>Supervise them</h3>
+              <p>Reinforce their visual-semantic information during model training and fine-tuning.</p>
+              <p class="contribution-conclusion"><span>Conclusion</span>Supervising the contextual space improves generation quality and distributional coverage.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="abstract" class="section shell prose">
+      <h2>Abstract</h2>
+      <p>Multimodal Diffusion Transformers (MM-DiTs) jointly process visual and textual representations throughout generation. These models repeatedly update the text tokens through multimodal attention, forming dynamic <em>contextual tokens</em> whose function is not well understood. In this work, we introduce a framework for <em>reading</em> this contextual space through natural-language interrogation. We train a lightweight bottleneck network that maps intermediate contextual tokens into the input space of a frozen Large Language Model (LLM), allowing the LLM to answer questions about the emerging image directly from these hidden representations.</p>
+      <p>Our reader reveals that contextual tokens encode a rich, global representation of the emerging scene: generation-specific semantics, including attributes left underspecified by the prompt, are accessible surprisingly early in denoising, while increasingly fine-grained details become readable over time. Remarkably, this information remains decodable even when the MM-DiT receives an empty prompt, showing that contextual tokens accumulate substantial image-specific information from the evolving visual representation itself. We further find that generations with more readable contextual representations tend to receive higher human-preference scores.</p>
+      <p>Building on these observations, we introduce Contextual Alignment, a training technique that explicitly reinforces the visual-semantic information encoded in the contextual tokens, improving generation quality and distributional coverage. Together, our results establish contextual tokens as both an interpretable view into the internal dynamics of MM-DiTs and an effective target for improving generative models.</p>
+    </section>
+
+    <section id="method" class="section tinted">
+      <div class="shell">
+        <p class="section-kicker">Reading the contextual tokens</p>
+        <h2>The Contextual Reader</h2>
+        <p class="section-intro">We train a lightweight bottleneck network that projects intermediate contextual tokens into the input space of an LLM. Because the LLM relies exclusively on the projected contextual tokens to answer visual questions, the bottleneck learns to extract the model’s internal visual semantics directly from the text-side representation.</p>
+        <figure class="paper-figure">
+          <img src="static/images/reader-architecture.png" alt="Architecture of the Contextual Reader.">
+        </figure>
+
+        <div class="reading-result">
+          <h3>Reading with a prompt</h3>
+          <p>With the same prompt and different random seeds, the reader recovers details that the prompt leaves unspecified. At 8 percent of denoising, it can already identify differences in the background, appearance, and held objects while the visual predictions remain ambiguous.</p>
+        </div>
+        <figure class="paper-figure">
+          <img src="static/images/conditional-reader-cropped.jpg" alt="Conditional reader examples comparing two random seeds.">
+        </figure>
+
+        <div class="reading-result">
+          <h3>Reading without a prompt</h3>
+          <p>When the MM-DiT receives an empty prompt, the reader still recovers increasingly specific information from the contextual tokens. For example, the reader identifies that the person is “Holding a microphone” at 8%, and then corrects to “Giving a speech with a microphone” at 20%.</p>
+        </div>
+        <figure class="paper-figure">
+          <img src="static/images/unconditional-reader-cropped.jpg" alt="Reader predictions across denoising when the MM-DiT receives an empty prompt.">
+        </figure>
+
+        <div class="readability-block">
+          <div class="readability-copy">
+            <h3>Readability increases during denoising</h3>
+            <p>With the input prompt, the contextual tokens are informative from the beginning and become more readable as generation progresses. With an empty prompt, readability rises rapidly as image specific information enters the contextual space.</p>
+            <p>This trend is consistent across SD3.5 and FLUX.2.</p>
+          </div>
+          <div class="readability-chart">
+            <div class="plot-legend" aria-label="Plot legend">
+              <span class="legend-item blue solid">SD3.5 conditional</span>
+              <span class="legend-item gold solid">FLUX.2 conditional</span>
+              <span class="legend-item blue dashed">SD3.5 unconditional</span>
+              <span class="legend-item gold dashed">FLUX.2 unconditional</span>
+            </div>
+            <img src="static/images/readability-plot.png" alt="Contextual readability across denoising for conditional and unconditional readers on SD3.5 and FLUX.2.">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="alignment" class="section">
+      <div class="shell">
+        <p class="section-kicker">Strengthening the representation</p>
+        <h2>Contextual Alignment</h2>
+        <p class="section-intro">We saw that the contextual tokens can become highly semantically informative even without direct access to the prompt. Because this representation emerges solely under the denoising objective, its semantic structure appears useful to the generation process itself. We therefore introduce a regularization objective for training an MM-DiT that encourages an early contextual layer to align with a global semantic embedding of the clean image. The Aligner Network is used only during training, so inference cost remains unchanged.</p>
+        <figure class="paper-figure compact">
+          <img src="static/images/contextual-alignment.png" alt="Contextual Alignment training diagram.">
+        </figure>
+
+        <div class="quantitative-results">
+          <p class="section-kicker">Quantitative results</p>
+          <div class="result-section">
+            <div class="result-heading">
+              <h3>Full model training</h3>
+              <p>Contextual Alignment complements each visual representation alignment baseline and improves all reported metrics.</p>
+            </div>
+            <div class="table-scroll">
+              <table class="results-table">
+                <thead><tr><th>Method</th><th>FID ↓</th><th>CLIP ×10² ↑</th><th>HPS ×10² ↑</th><th>Precision ↑</th><th>Recall ↑</th></tr></thead>
+                <tbody>
+                  <tr><td>REPA</td><td>4.95</td><td>24.20</td><td>21.38</td><td>0.591</td><td>0.338</td></tr>
+                  <tr class="coal-row"><td>REPA + CoAl</td><td><strong>4.29</strong></td><td><strong>24.40</strong></td><td><strong>21.60</strong></td><td><strong>0.628</strong></td><td><strong>0.407</strong></td></tr>
+                  <tr><td>HASTE</td><td>4.87</td><td>24.21</td><td>21.42</td><td>0.609</td><td>0.361</td></tr>
+                  <tr class="coal-row"><td>HASTE + CoAl</td><td><strong>4.44</strong></td><td><strong>24.32</strong></td><td><strong>21.56</strong></td><td><strong>0.623</strong></td><td><strong>0.400</strong></td></tr>
+                  <tr><td>SRA</td><td>5.89</td><td>23.49</td><td>20.37</td><td>0.515</td><td>0.261</td></tr>
+                  <tr class="coal-row"><td>SRA + CoAl</td><td><strong>4.36</strong></td><td><strong>24.28</strong></td><td><strong>21.42</strong></td><td><strong>0.616</strong></td><td><strong>0.398</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="result-section">
+            <div class="result-heading">
+              <h3>Fine tuning a pretrained model</h3>
+              <p>Other representation alignment methods provide only minimal gains during fine tuning and do not improve FID over vanilla flow matching. Contextual Alignment achieves the best FID and recall.</p>
+            </div>
+            <div class="table-scroll">
+              <table class="results-table fine-table">
+                <thead><tr><th>Method</th><th>FID ↓</th><th>Precision ↑</th><th>Recall ↑</th></tr></thead>
+                <tbody>
+                  <tr><td>Base Model</td><td>19.30</td><td>0.993</td><td>0.939</td></tr>
+                  <tr><td>Vanilla Flow</td><td>17.18</td><td>0.993</td><td>0.966</td></tr>
+                  <tr><td>REPA</td><td>17.45</td><td>0.993</td><td>0.966</td></tr>
+                  <tr><td>HASTE</td><td>17.53</td><td><strong>0.994</strong></td><td>0.963</td></tr>
+                  <tr><td>SRA</td><td>17.48</td><td>0.991</td><td>0.964</td></tr>
+                  <tr class="best-row"><td>Contextual Alignment</td><td><strong>16.75</strong></td><td>0.993</td><td><strong>0.969</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="comparisons" class="section comparison-section">
+      <div class="shell wide">
+        <p class="section-kicker">Fine-tuning on Fine-T2I</p>
+        <h2>Qualitative comparisons</h2>
+        <p class="section-intro">Explore 20 prompts compared across the reference image, vanilla fine tuning, REPA, HASTE, SRA, and Contextual Alignment. The reference image is a real image from the Fine-T2I validation set.</p>
+
+        <p class="scroll-hint">On smaller screens, swipe each comparison row horizontally. Click any image to enlarge it.</p>
+        <div id="full-comparison-gallery" class="gallery-panel" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <section id="bibtex" class="section shell prose">
+      <h2>BibTeX</h2>
+    </section>
+  </main>
+
+  <dialog id="image-lightbox" class="image-lightbox" aria-label="Expanded comparison image">
+    <button class="lightbox-close" type="button" aria-label="Close expanded image">×</button>
+    <img src="" alt="">
+    <p></p>
+  </dialog>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>Learning to Read the Contextual Tokens in Diffusion Transformers</span>
+      <span>Page style inspired by the <a href="https://nerfies.github.io/">Nerfies</a> academic project-page template.</span>
+    </div>
+  </footer>
+  <script src="static/js/results.js?v=20261001f"></script>
+</body>
+</html>
