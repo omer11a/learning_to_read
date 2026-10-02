@@ -11,15 +11,15 @@
   <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:ital,wght@0,600;1,500&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/index.css?v=20261001f">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+Cuneiform&amp;family=Source+Serif+4:ital,wght@0,600;1,500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/index.css?v=20261002i">
 </head>
 <body>
   <nav class="site-nav" aria-label="Page navigation">
     <a class="wordmark" href="#top">Learning to Read</a>
     <div class="nav-links">
-      <a href="#overview">Overview</a>
       <a href="#abstract">Abstract</a>
+      <a href="#overview">Overview</a>
       <a href="#method">Reading</a>
       <a href="#alignment">Alignment</a>
       <a href="#comparisons">Comparisons</a>
@@ -54,75 +54,110 @@
     </header>
 
     <section class="teaser shell wide">
-      <p class="section-kicker">TL;DR</p>
-      <p class="tldr-summary">Contextual tokens are the text tokens inside an MM-DiT, and they are continuously updated based on information from the evolving image. We propose to <em>read</em> them as plain text to uncover what semantic information they obtain about the image, and to supervise them, resulting in better generation quality and distributional coverage.</p>
-      <img src="static/images/teaser.jpg" alt="Six ambiguous early denoising predictions, labeled by activities decoded from contextual tokens.">
-      <p class="teaser-explanation"><strong>What is this person doing?</strong> At an early denoising stage, we can extract the answer directly from the contextual tokens, even when the MM-DiT receives an empty prompt and the visual prediction remains ambiguous.</p>
-      <div id="overview" class="tldr">
-        <p class="section-kicker">Overview</p>
-        <h2>Reading and supervising the contextual space of MM-DiTs</h2>
-        <p class="tldr-intro">MM-DiTs jointly update visual and textual representations throughout generation. Image tokens are especially accessible to analysis; the evolving text-side representation is less understood.</p>
-
-        <div class="architecture-visual" aria-label="Comparison between image tokens and contextual tokens in an MM-DiT">
-          <div class="stream-panel image-stream">
-            <span class="stream-name">Visual stream</span>
-            <div class="image-token-grid" aria-hidden="true">
-              <i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i>
-            </div>
-            <h3>Image tokens</h3>
-            <ul>
-              <li>Form a spatial representation of the evolving image</li>
-              <li>Can be visualized as images</li>
-              <li>Are explicitly supervised by the denoising objective</li>
-            </ul>
-          </div>
-
-          <div class="attention-bridge" aria-hidden="true">
-            <span class="model-label">MM-DiT</span>
-            <span class="attention-arrows">⇄</span>
-            <span class="attention-label">multimodal<br>attention</span>
-          </div>
-
-          <div class="stream-panel contextual-stream">
-            <span class="stream-name">Text stream</span>
-            <div class="context-token-row" aria-hidden="true">
-              <i>A</i><i>photo</i><i>of</i><i>...</i>
-            </div>
-            <div class="context-token-row evolved" aria-hidden="true">
-              <i></i><i></i><i></i><i></i>
-            </div>
-            <h3>Contextual tokens</h3>
-            <ul>
-              <li>Text tokens updated through multimodal attention</li>
-              <li>Absorb information from the emerging visual representation</li>
-              <li>Have no explicit spatial correspondence or dedicated supervision</li>
-            </ul>
-          </div>
-        </div>
-
-        <p class="contribution-intro">In this work, we suggest two complementary ways to study and utilize the contextual tokens:</p>
-        <div class="contribution-flow">
-          <div class="contribution read">
-            <span class="contribution-number">1</span>
-            <div>
-              <h3>Read them</h3>
-              <p>Use question answering to extract plain-text directly from the contextual tokens.</p>
-              <p class="contribution-conclusion"><span>Conclusion</span>Contextual tokens capture global semantic information about the image, even when no prompt is provided to the model.</p>
-            </div>
-          </div>
-          <div class="contribution supervise">
-            <span class="contribution-number">2</span>
-            <div>
-              <h3>Supervise them</h3>
-              <p>Reinforce their visual-semantic information during model training and fine-tuning.</p>
-              <p class="contribution-conclusion"><span>Conclusion</span>Supervising the contextual space improves generation quality and distributional coverage.</p>
-            </div>
-          </div>
-        </div>
+      <div class="tldr-summary-block">
+        <p class="section-kicker">TL;DR</p>
+        <p class="tldr-summary">Contextual tokens are the text tokens inside an MM-DiT, and they are continuously updated based on information from the evolving image. We propose to <em>read</em> them as plain text to uncover what semantic information they obtain about the image, and to supervise them, resulting in better generation quality and distributional coverage.</p>
       </div>
+
+      <div class="teaser-demo">
+        <p class="section-kicker">Reading the contextual tokens</p>
+        <h2 class="teaser-question">What is this person doing?</h2>
+        <p class="teaser-instruction">Below are visual predictions from an early denoising stage. By this stage, the contextual tokens already absorb enough information from the image to answer the question above, even when no prompt is provided. Click each image to reveal the answer read directly from the contextual tokens.</p>
+
+        <div class="teaser-card-grid" aria-label="Interactive contextual reader examples">
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example one">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/cooking.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/cooking-final.jpg" alt="Final generated image showing a person cooking.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Cooking</strong></span>
+              </span>
+            </span>
+          </button>
+
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example two">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/tennis.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/tennis-final.jpg" alt="Final generated image showing a person playing tennis.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Playing tennis</strong></span>
+              </span>
+            </span>
+          </button>
+
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example three">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/skateboarding.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/skateboarding-final.jpg" alt="Final generated image showing a person skateboarding.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Skateboarding</strong></span>
+              </span>
+            </span>
+          </button>
+
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example four">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/dancing.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/dancing-final.jpg" alt="Final generated image showing a person dancing.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Dancing</strong></span>
+              </span>
+            </span>
+          </button>
+
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example five">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/guitar.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/guitar-final.jpg" alt="Final generated image showing a person playing guitar.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Playing guitar</strong></span>
+              </span>
+            </span>
+          </button>
+
+          <button class="teaser-card" type="button" aria-pressed="false" aria-label="Reveal the reader answer for example six">
+            <span class="teaser-card-inner">
+              <span class="teaser-card-face teaser-card-front">
+                <img src="static/images/teaser-cards/horse.jpg" alt="Ambiguous early denoising prediction.">
+                <span class="fold-corner" aria-hidden="true">?</span>
+                <span class="reveal-label">Click to reveal</span>
+              </span>
+              <span class="teaser-card-face teaser-card-back">
+                <img src="static/images/teaser-cards/horse-final.jpg" alt="Final generated image showing a person riding a horse.">
+                <span class="final-image-label">Final image</span>
+                <span class="answer-overlay"><span class="answer-kicker">The reader answers</span><strong>Riding a horse</strong></span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+      </div>
+
     </section>
 
     <section id="abstract" class="section shell prose">
@@ -132,7 +167,75 @@
       <p>Building on these observations, we introduce Contextual Alignment, a training technique that explicitly reinforces the visual-semantic information encoded in the contextual tokens, improving generation quality and distributional coverage. Together, our results establish contextual tokens as both an interpretable view into the internal dynamics of MM-DiTs and an effective target for improving generative models.</p>
     </section>
 
-    <section id="method" class="section tinted">
+    <section id="overview" class="section tinted">
+      <div class="shell wide overview-section">
+      <p class="section-kicker">Overview</p>
+      <h2>Reading and supervising the contextual space of MM-DiTs</h2>
+      <p class="tldr-intro">MM-DiTs jointly update visual and textual representations throughout generation. Image tokens are accessible to analysis and have been extensively studied; the evolving text-side representation, which we refer to as contextual tokens, is less understood.</p>
+
+      <div class="architecture-visual token-flow-scroll" aria-label="Prompt tokens and image tokens exchange information through multimodal attention. After attention, the text-side contextual tokens no longer correspond to readable words.">
+        <div class="token-flow-diagram">
+          <div class="flow-row flow-inputs">
+            <div class="flow-token-group prompt-group">
+              <span class="flow-label">Prompt tokens</span>
+              <div class="flow-token-grid prompt-tokens" aria-hidden="true">
+                <i>A</i><i>photo</i><i>of</i><i>...</i>
+              </div>
+            </div>
+            <div class="flow-token-group image-group">
+              <span class="flow-label">Image tokens</span>
+              <div class="flow-token-grid image-tokens" aria-hidden="true">
+                <i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="attention-mixing" aria-hidden="true">
+            <span>Multimodal attention</span>
+            <svg class="all-to-all-lines" viewBox="0 0 1000 260" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div class="flow-row flow-outputs">
+            <div class="flow-token-group contextual-group">
+              <span class="flow-label">Contextual tokens</span>
+              <div class="flow-token-grid contextual-tokens" aria-label="Unreadable contextual token symbols">
+                <i>𒀭</i><i>𒂊</i><i>𒆠</i><i>𒌋</i>
+              </div>
+              <small>Updated text tokens</small>
+            </div>
+            <div class="flow-token-group image-group output-image-group">
+              <span class="flow-label">Updated image tokens</span>
+              <div class="flow-token-grid image-tokens updated-image-tokens" aria-hidden="true">
+                <i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="contribution-intro">In this work, we suggest two complementary ways to study and utilize the contextual tokens:</p>
+      <div class="contribution-flow">
+        <div class="contribution read">
+          <span class="contribution-number">1</span>
+          <div>
+            <h3>Read them</h3>
+            <p>Extract plain-text directly from the contextual tokens.</p>
+            <p class="contribution-conclusion"><span class="insight-icon" aria-hidden="true">💡</span><strong>Contextual tokens capture detailed image semantics, even when no prompt is provided.</strong></p>
+          </div>
+        </div>
+        <div class="contribution supervise">
+          <span class="contribution-number">2</span>
+          <div>
+            <h3>Supervise them</h3>
+            <p>Reinforce their visual-semantic information during training.</p>
+            <p class="contribution-conclusion"><span class="insight-icon" aria-hidden="true">💡</span><strong>Supervision improves generation quality and distributional coverage.</strong></p>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section id="method" class="section">
       <div class="shell">
         <p class="section-kicker">Reading the contextual tokens</p>
         <h2>The Contextual Reader</h2>
@@ -176,11 +279,11 @@
       </div>
     </section>
 
-    <section id="alignment" class="section">
+    <section id="alignment" class="section tinted">
       <div class="shell">
         <p class="section-kicker">Strengthening the representation</p>
         <h2>Contextual Alignment</h2>
-        <p class="section-intro">We saw that the contextual tokens can become highly semantically informative even without direct access to the prompt. Because this representation emerges solely under the denoising objective, its semantic structure appears useful to the generation process itself. We therefore introduce a regularization objective for training an MM-DiT that encourages an early contextual layer to align with a global semantic embedding of the clean image. The Aligner Network is used only during training, so inference cost remains unchanged.</p>
+        <p class="section-intro">We saw that the contextual tokens can become highly semantically informative even without direct access to the prompt. Because this representation emerges solely under the denoising objective, its semantic structure appears useful to the generation process itself. We therefore introduce Contextual Alignment (CoAl), a regularization objective that encourages an early contextual layer to align with a global semantic embedding of the clean image. The Aligner Network is used only during training, so inference cost remains unchanged.</p>
         <figure class="paper-figure compact">
           <img src="static/images/contextual-alignment.png" alt="Contextual Alignment training diagram.">
         </figure>
@@ -190,7 +293,7 @@
           <div class="result-section">
             <div class="result-heading">
               <h3>Full model training</h3>
-              <p>Contextual Alignment complements each visual representation alignment baseline and improves all reported metrics.</p>
+              <p>We train a dual-stream MM-DiT on MS-COCO and add CoAl to each visual alignment method, testing whether contextual and visual alignment are complementary.</p>
             </div>
             <div class="table-scroll">
               <table class="results-table">
@@ -210,7 +313,7 @@
           <div class="result-section">
             <div class="result-heading">
               <h3>Fine tuning a pretrained model</h3>
-              <p>Other representation alignment methods provide only minimal gains during fine tuning and do not improve FID over vanilla flow matching. Contextual Alignment achieves the best FID and recall.</p>
+              <p>We fine tune SD3-Medium on Fine-T2I and test each method individually. Visual alignment does not improve FID over vanilla flow matching, while CoAl achieves the best FID and recall.</p>
             </div>
             <div class="table-scroll">
               <table class="results-table fine-table">
@@ -241,8 +344,10 @@
       </div>
     </section>
 
-    <section id="bibtex" class="section shell prose">
-      <h2>BibTeX</h2>
+    <section id="bibtex" class="section tinted">
+      <div class="shell prose">
+        <h2>BibTeX</h2>
+      </div>
     </section>
   </main>
 
@@ -258,6 +363,6 @@
       <span>Page style inspired by the <a href="https://nerfies.github.io/">Nerfies</a> academic project-page template.</span>
     </div>
   </footer>
-  <script src="static/js/results.js?v=20261001f"></script>
+  <script src="static/js/results.js?v=20261002g"></script>
 </body>
 </html>

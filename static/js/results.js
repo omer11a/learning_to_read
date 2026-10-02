@@ -1,7 +1,7 @@
 const fullComparisons = [
   ["p10-r01", "A single, delicate pink flower"],
   ["p10-r02", "Red wine pouring into a glass"],
-  ["p10-r03", "A curly-haired woman in a bubble bath"],
+  ["p10-r03", "A curly-haired woman with a relaxed expression in a bubble bath"],
   ["p10-r04", "A Canon EOS camera on a wooden surface"],
   ["p10-r05", "Two white swans floating on calm water"],
   ["p10-r06", "A close-up portrait of three diverse young women"],
@@ -31,6 +31,30 @@ const methods = [
 ];
 
 const assetVersion = "20261001b";
+
+document.querySelectorAll(".teaser-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const revealed = card.getAttribute("aria-pressed") === "true";
+    card.setAttribute("aria-pressed", String(!revealed));
+  });
+});
+
+const attentionSvg = document.querySelector(".all-to-all-lines");
+if (attentionSvg) {
+  const tokenCenters = [90, 210, 330, 450, 550, 670, 790, 910];
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  tokenCenters.forEach((sourceX, sourceIndex) => {
+    tokenCenters.forEach(targetX => {
+      const line = document.createElementNS(svgNamespace, "line");
+      line.setAttribute("x1", String(sourceX));
+      line.setAttribute("y1", "4");
+      line.setAttribute("x2", String(targetX));
+      line.setAttribute("y2", "256");
+      line.setAttribute("class", sourceIndex < 4 ? "prompt-connection" : "image-connection");
+      attentionSvg.appendChild(line);
+    });
+  });
+}
 
 function image(path, alt, className = "") {
   const figure = document.createElement("figure");
